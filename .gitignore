@@ -1,0 +1,7 @@
+node_modules/
+*.log
+k6/results/
+*.jtl
+jmeter/report/
+.env
+notes/
