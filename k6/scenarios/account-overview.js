@@ -1,23 +1,14 @@
 import { sleep } from 'k6';
-import { login, getOverview, registerUser, randomUser } from '../lib/parabank.js';
+import { login, getOverview } from '../lib/parabank.js';
 import { buildOptions } from '../lib/scenarios.js';
 
 export const options = buildOptions('overviewFlow');
 
-export function setup() {
-  const count = Number(__ENV.USER_COUNT || 20);
-  const users = [];
-  for (let i = 0; i < count; i++) {
-    const user = randomUser(i);
-    registerUser(user);
-    users.push({ username: user.username, password: user.password });
-  }
-  return { users };
-}
+const DEMO_USERNAME = __ENV.DEMO_USERNAME || 'john';
+const DEMO_PASSWORD = __ENV.DEMO_PASSWORD || 'demo';
 
-export function overviewFlow(data) {
-  const user = data.users[__VU % data.users.length];
-  const { ok } = login(user.username, user.password);
+export function overviewFlow() {
+  const { ok } = login(DEMO_USERNAME, DEMO_PASSWORD);
   if (ok) {
     sleep(1); // brief pause between login and viewing overview
     getOverview();
